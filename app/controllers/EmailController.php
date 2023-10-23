@@ -1,6 +1,7 @@
 <?php
 require 'app/vendor/autoload.php'; // Autoload PHPMailer
 require 'app/config/app.php'; // Include your app configuration file
+require 'app/models/EmailLogModel.php'; 
 
 use PHPMailer\PHPMailer\Exception;
 use Predis\Client;
@@ -56,6 +57,10 @@ class EmailController {
 
             $response['error'] = false;
             $response['message'] = 'Email job queued.';
+
+            // Log the email in the database
+            $emailLogModel = new EmailLogModel();
+            $emailLogModel->logEmail($from, $to, $subject, $body);
         } catch (Exception $e) {
             // Handle errors
         }

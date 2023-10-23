@@ -1,5 +1,5 @@
 <?php
-require_once 'config/app.php';
+require_once 'app/config/app.php';
 
 class EmailLogModel {
     private $db;
