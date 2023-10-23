@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "b13479f1-1073-43f6-9af9-f4c5e2f8e7b5",
+		"name": "Levart-code-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7249542"
+	},
+	"item": [
+		{
+			"name": "send email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"from\":\"kevinfarel@gmail.com\",\r\n    \"to\":\"test@gmail.com\",\r\n    \"subject\":\"this is test email subject\",\r\n    \"body\":\"this is the sample of the body\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/index.php?controller=email&action=sendEmail",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "controller",
+							"value": "email"
+						},
+						{
+							"key": "action",
+							"value": "sendEmail"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "New Request",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"from\":\"kevinfarel@gmail.com\",\r\n    \"to\":\"test@gmail.com\",\r\n    \"subject\":\"this is test of queue email\",\r\n    \"body\":\"I Hope its a success\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/index.php?controller=email&action=sendEmail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "controller",
+									"value": "email"
+								},
+								{
+									"key": "action",
+									"value": "sendEmail"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 23 Oct 2023 15:25:00 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.2.4"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": false,\n    \"message\": \"Email job queued.\"\n}"
+				}
+			]
+		}
+	]
+}

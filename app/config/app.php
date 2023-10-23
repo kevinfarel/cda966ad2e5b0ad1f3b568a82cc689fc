@@ -1,5 +1,5 @@
 <?php
-// Database configuration
+// Database
 $dbHost = 'localhost';
 $dbName = 'levart-test-db';
 $dbUser = 'postgres';
@@ -11,10 +11,6 @@ $smtpUsername = '58227eb102dd2f';
 $smtpPassword = '7599873514db8c';
 $smtpPort = 2525;
 
-// Other configuration options (if needed)
-// ...
-
-// Define constants for these values
 define('DB_HOST', $dbHost);
 define('DB_NAME', $dbName);
 define('DB_USER', $dbUser);
