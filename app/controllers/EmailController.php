@@ -1,17 +1,23 @@
 <?php
-require 'vendor/autoload.php'; // Autoload PHPMailer
-require 'config/app.php'; // Include your app configuration file
+require 'app/vendor/autoload.php'; // Autoload PHPMailer
+require 'app/config/app.php'; // Include your app configuration file
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use Predis\Client;
 
 class EmailController {
     public function sendEmail() {
         $response = [
             'error' => true,
-            'message' => 'Email sending failed.'
+            'message' => 'Email job queued.'
         ];
+
+        // Create a Predis client to connect to the Redis server
+        $client = new Client([
+            'scheme' => 'tcp',
+            'host' => 'host.docker.internal', // Use this to connect to Redis on localhost
+            'port' => 6379,
+        ]);
 
         try {
             // Check if the request is a POST request and contains JSON data
@@ -38,34 +44,20 @@ class EmailController {
             $subject = $requestData['subject'] ?? 'Test Email';
             $body = $requestData['body'] ?? 'This is a test email sent using PHPMailer and TLS encryption';
 
-            // Create a PHPMailer instance
-            $mail = new PHPMailer(true);
+            // Push the email job to the Redis queue
+            $emailData = [
+                'from' => $from,
+                'to' => $to,
+                'subject' => $subject,
+                'body' => $body,
+            ];
 
-            // SMTP settings
-            $mail->isSMTP();
-            $mail->Host = SMTP_SERVER; // Your SMTP server (from app.php)
-            $mail->SMTPAuth = true;
-            $mail->Username = SMTP_USERNAME; // Your SMTP username (from app.php)
-            $mail->Password = SMTP_PASSWORD; // Your SMTP password (from app.php)
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
-            $mail->Port = SMTP_PORT; // Your SMTP port (from app.php)
+            $client->lpush('email_jobs', json_encode($emailData));
 
-            // Sender and recipient information
-            $mail->setFrom($from, 'Sender Name');
-            $mail->addAddress($to, 'Recipient Name');
-
-            // Email content
-            $mail->isHTML(false);
-            $mail->Subject = $subject;
-            $mail->Body = $body;
-
-            // Send the email
-            $mail->send();
             $response['error'] = false;
-            $response['message'] = 'Email sent successfully';
+            $response['message'] = 'Email job queued.';
         } catch (Exception $e) {
-            $response['error'] = true;
-            $response['message'] = 'Email sending failed. Error: ' . $mail->ErrorInfo;
+            // Handle errors
         }
 
         $this->sendJsonResponse($response);

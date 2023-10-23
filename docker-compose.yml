@@ -1,0 +1,17 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  worker:
+    build:
+      context: . # Use the current directory as the build context
+      dockerfile: Dockerfile.worker
+    volumes:
+      - .:/app
+    environment:
+      - COMPOSER_ALLOW_SUPERUSER=1 
+    depends_on:
+      - redis
